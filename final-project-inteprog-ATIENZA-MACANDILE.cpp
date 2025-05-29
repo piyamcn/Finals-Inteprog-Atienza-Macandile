@@ -124,3 +124,53 @@ public:
         roomNumber = newRoomNumber; 
     }
 };
+
+int Reservation::idCounter = 0;
+
+class Hotel {
+private:
+    vector<Room> rooms;
+    vector<Reservation> reservations;
+
+public:
+    const vector<Room>& getRooms() const {
+        return rooms;
+    }
+
+    void addRoom(int number, Room::RoomType type, double rate, unique_ptr<BillingStrategy> strategy, int guests) {
+        rooms.emplace_back(number, type, rate, move(strategy), guests);
+    }
+
+    void deleteRoom(int roomNumber) {
+        for (auto it = rooms.begin(); it != rooms.end(); ++it) {
+            if (it->getRoomNumber() == roomNumber) {
+                rooms.erase(it);
+                cout << "Room " << roomNumber << " deleted successfully!\n";
+                return;
+            }
+        }
+        cout << "Room not found.\n";
+    }
+
+    void updateRoomRate(int roomNumber, double newRate) {
+        for (auto& room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                room.setBaseRate(newRate);
+                cout << "Room " << roomNumber << " rate updated to $" << newRate << " successfully!\n";
+                return;
+            }
+        }
+        cout << "Room not found.\n";
+    }
+
+    void updateRoomBillingStrategy(int roomNumber, unique_ptr<BillingStrategy> strategy) {
+        for (auto& room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                room.setBillingStrategy(move(strategy));
+                cout << "Room " << roomNumber << " billing strategy updated successfully!\n";
+                return;
+            }
+        }
+        cout << "Room not found.\n";
+    }
+};
