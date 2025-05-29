@@ -8,16 +8,14 @@
 
 using namespace std;
 
-// Abstract Billing Strategy
-class BillingStrategy { //parent
+class BillingStrategy { 
 public:
     virtual double calculateBill(double baseRate, int nights) const = 0;
     virtual string getBillingType() const = 0;
-    virtual ~BillingStrategy() = default; // Virtual destructor for proper cleanup
+    virtual ~BillingStrategy() = default; 
 };
 
-// Concrete Billing Strategies 
-class RegularBilling : public BillingStrategy { //child class
+class RegularBilling : public BillingStrategy { 
 public:
     double calculateBill(double baseRate, int nights) const override {
         return baseRate * nights;
@@ -30,7 +28,7 @@ public:
 class PremiumBilling : public BillingStrategy {
 public:
     double calculateBill(double baseRate, int nights) const override {
-        return baseRate * nights * 1.10; // 10% service charge
+        return baseRate * nights * 1.10; 
     }
     string getBillingType() const override {
         return "Premium";
@@ -40,14 +38,13 @@ public:
 class CorporateBilling : public BillingStrategy {
 public:
     double calculateBill(double baseRate, int nights) const override {
-        return baseRate * nights * 0.85; // 15% discount
+        return baseRate * nights * 0.85; 
     }
     string getBillingType() const override {
         return "Corporate";
     }
 };
 
-// Room class representing a hotel room
 class Room { 
 public:
     enum class RoomType { SINGLE, DOUBLE, DELUXE, SUITE };
@@ -90,5 +87,40 @@ public:
 
     string getBillingStrategyString() const {
         return billingStrategy->getBillingType();
+    }
+};
+
+class Reservation {
+private:
+    static int idCounter;
+    int reservationID;
+    string guestName;
+    string contactInfo;
+    int roomNumber;
+    string checkInDate;
+    string checkOutDate;
+    int numberOfGuests;
+
+public:
+    Reservation(const string& name, const string& contact, int roomNum, const string& checkIn, const string& checkOut, int guests)
+        : guestName(name), contactInfo(contact), roomNumber(roomNum), checkInDate(checkIn), checkOutDate(checkOut), numberOfGuests(guests) {
+        reservationID = ++idCounter; 
+    }
+
+    int getReservationID() const { return reservationID; }
+    string getGuestName() const { return guestName; }
+    string getContactInfo() const { return contactInfo; }
+    int getRoomNumber() const { return roomNumber; }
+    string getCheckInDate() const { return checkInDate; }
+    string getCheckOutDate() const { return checkOutDate; }
+    int getNumberOfGuests() const { return numberOfGuests; }
+
+    void updateGuests(int guests) { numberOfGuests = guests; }
+    void updateDates(const string& checkIn, const string& checkOut) {
+        checkInDate = checkIn;
+        checkOutDate = checkOut;
+    }
+    void updateRoomNumber(int newRoomNumber) {
+        roomNumber = newRoomNumber; 
     }
 };
