@@ -173,4 +173,87 @@ public:
         }
         cout << "Room not found.\n";
     }
+    
+    void showAvailableRooms() const {
+        cout << "===== AVAILABLE ROOMS =====\n";
+        cout << "Room #    Type           Base Rate      Billing Type   Max Guests\n";
+        cout << "------------------------------------------------------------------\n";
+        for (const auto& room : rooms) {
+            if (room.isRoomAvailable()) {
+                cout << setw(8) << room.getRoomNumber() << "  "
+                     << setw(10) << room.getRoomTypeString() << "  "
+                     << "$" << fixed << setprecision(2) << setw(10) << room.getBaseRate() << "  "
+                     << setw(12) << room.getBillingStrategyString() << "  "
+                     << setw(10) << room.getMaxGuests() << "\n";
+            }
+        }
+        cout << "===========================\n";
+    }
+
+    void showAllRooms() const {
+        cout << "===== ALL ROOMS =====\n";
+        cout << "Room #    Type           Base Rate      Status         Billing Type   Max Guests\n";
+        cout << "--------------------------------------------------------------------------------\n";
+        for (const auto& room : rooms) {
+            cout << setw(8) << room.getRoomNumber() << "  "
+                 << setw(10) << room.getRoomTypeString() << "  "
+                 << "$" << fixed << setprecision(2) << setw(10) << room.getBaseRate() << "  "
+                 << setw(12) << (room.isRoomAvailable() ? "Available" : "Occupied") << "  "
+                 << setw(12) << room.getBillingStrategyString() << "  "
+                 << setw(10) << room.getMaxGuests() << "\n";
+        }
+        cout << "===========================\n";
+    }
+
+   void makeReservation(const string& guestName, const string& contactInfo, int roomNumber, const string& checkIn, const string& checkOut, int guests) {
+    for (auto& room : rooms) {
+        if (room.getRoomNumber() == roomNumber) {
+            if (guests > room.getMaxGuests()) {
+                cout << "Error: Room " << roomNumber << " can only accommodate " << room.getMaxGuests() << " guests.\n";
+                return; 
+            }
+            if (room.isRoomAvailable()) {
+                room.setAvailability(false);
+                reservations.emplace_back(guestName, contactInfo, roomNumber, checkIn, checkOut, guests);
+                cout << "Reservation created successfully!\n"; 
+                return;
+            } else {
+                cout << "Room not available for reservation.\n";
+                return;
+            }
+        }
+    }
+    cout << "Room not found.\n";
+}
+
+    void cancelReservation(int reservationID) {
+        for (auto it = reservations.begin(); it != reservations.end(); ++it) {
+            if (it->getReservationID() == reservationID) {
+                for (auto& room : rooms) {
+                    if (room.getRoomNumber() == it->getRoomNumber()) {
+                        room.setAvailability(true);
+                        break;
+                    }
+                }
+                reservations.erase(it);
+                cout << "Reservation " << reservationID << " cancelled successfully!\n";
+                return;
+            }
+        }
+        cout << "Reservation not found.\n";
+    }
+
+    void showAllReservations() const {
+        cout << "===== ALL RESERVATIONS =====\n";
+        cout << "ID        Guest Name      Room #    Check-in      Check-out\n";
+        cout << "-------------------------------------------------------------\n";
+        for (const auto& reservation : reservations) {
+            cout << setw(8) << reservation.getReservationID() << "  | "
+                 << setw(12) << reservation.getGuestName() << "  | "
+                 << setw(8) << reservation.getRoomNumber() << "  | "
+                 << setw(12) << reservation.getCheckInDate() << "  | "
+                 << setw(12) << reservation.getCheckOutDate() << "\n";
+        }
+        cout << "===========================\n";
+    }
 };
