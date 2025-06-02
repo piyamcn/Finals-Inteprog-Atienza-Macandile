@@ -12,7 +12,7 @@ class BillingStrategy {
 public:
     virtual double calculateBill(double baseRate, int nights) const = 0;
     virtual string getBillingType() const = 0;
-    virtual ~BillingStrategy() = default; 
+    virtual ~BillingStrategy() = default;
 };
 
 class RegularBilling : public BillingStrategy { 
@@ -173,7 +173,7 @@ public:
         }
         cout << "Room not found.\n";
     }
-    
+
     void showAvailableRooms() const {
         cout << "===== AVAILABLE ROOMS =====\n";
         cout << "Room #    Type           Base Rate      Billing Type   Max Guests\n";
@@ -210,7 +210,7 @@ public:
         if (room.getRoomNumber() == roomNumber) {
             if (guests > room.getMaxGuests()) {
                 cout << "Error: Room " << roomNumber << " can only accommodate " << room.getMaxGuests() << " guests.\n";
-                return; 
+                return;
             }
             if (room.isRoomAvailable()) {
                 room.setAvailability(false);
@@ -225,6 +225,9 @@ public:
     }
     cout << "Room not found.\n";
 }
+
+
+
 
     void cancelReservation(int reservationID) {
         for (auto it = reservations.begin(); it != reservations.end(); ++it) {
@@ -255,5 +258,159 @@ public:
                  << setw(12) << reservation.getCheckOutDate() << "\n";
         }
         cout << "===========================\n";
+    }
+
+    void viewReservationDetails(int reservationID) const {
+    for (const auto& reservation : reservations) {
+        if (reservation.getReservationID() == reservationID) {
+            cout << "===== RESERVATION DETAILS =====\n";
+            cout << "Reservation #" << reservation.getReservationID() << "\n";
+            cout << "Guest: " << reservation.getGuestName() << "\n";
+            cout << "Contact: " << reservation.getContactInfo() << "\n";
+            cout << "Room: " << reservation.getRoomNumber() << "\n";
+            cout << "Check-in: " << reservation.getCheckInDate() << "\n";
+            cout << "Check-out: " << reservation.getCheckOutDate() << "\n";
+            cout << "Guests: " << reservation.getNumberOfGuests() << "\n";
+
+            int checkInDay, checkInMonth, checkInYear;
+            int checkOutDay, checkOutMonth, checkOutYear;
+            sscanf(reservation.getCheckInDate().c_str(), "%d/%d/%d", &checkInDay, &checkInMonth, &checkInYear);
+            sscanf(reservation.getCheckOutDate().c_str(), "%d/%d/%d", &checkOutDay, &checkOutMonth, &checkOutYear);
+
+            int nights = 0;
+
+            if (checkInYear > checkOutYear || 
+                (checkInYear == checkOutYear && checkInMonth > checkOutMonth) || 
+                (checkInYear == checkOutYear && checkInMonth == checkOutMonth && checkInDay >= checkOutDay)) {
+                throw runtime_error("Invalid date range.");
+            }
+
+            const int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+            nights += daysInMonth[checkInMonth - 1] - checkInDay; 
+
+            for (int month = checkInMonth; month < checkOutMonth - 1; ++month) {
+                nights += daysInMonth[month];
+            }
+
+            nights += checkOutDay;
+
+            double totalBill = 0.0;
+            for (const auto& room : rooms) {
+                if (room.getRoomNumber() == reservation.getRoomNumber()) {
+                    totalBill = room.calculateBill(nights); 
+                    break;
+                }
+            }
+            cout << "Total Bill: $" << fixed << setprecision(2) << totalBill << "\n";
+            cout << "===============================\n";
+            return;
+        }
+    }
+    cout << "Reservation not found.\n";
+}
+
+
+void updateReservation(int reservationID) {
+    for (auto& reservation : reservations) {
+        if (reservation.getReservationID() == reservationID) {
+            cout << "Update Options:\n";
+            cout << "1. Change number of guests\n";
+            cout << "2. Change room\n";
+            cout << "3. Change dates\n";
+            cout << "4. Back\n";
+            int option;
+            option = getValidatedInt("Select update option (1-4): ");
+
+            switch (option) {
+                case 1: { 
+                    cout << "Current number of guests: " << reservation.getNumberOfGuests() << "\n";
+                    int newGuests = getValidatedInt("Enter new number of guests: ");
+
+                    for (const auto& room : rooms) {
+                        if (room.getRoomNumber() == reservation.getRoomNumber()) {
+                            if (newGuests > room.getMaxGuests()) {
+                                cout << "Error: Room " << room.getRoomNumber() << " can only accommodate " << room.getMaxGuests() << " guests.\n";
+                                return; 
+                            }
+                            break; 
+                        }
+                    }
+                    
+                    reservation.updateGuests(newGuests);
+                    cout << "Number of guests updated successfully.\n";
+                    break;
+                }
+                case 2: { 
+                    cout << "Current room: " << reservation.getRoomNumber() << "\n";
+                    showAvailableRooms();
+                    int newRoomNumber = getValidatedInt("Enter new room number: ");
+
+                    for (auto& room : rooms) {
+                        if (room.getRoomNumber() == newRoomNumber) {
+  
+                            if (reservation.getNumberOfGuests() > room.getMaxGuests()) {
+                                cout << "Error: Room " << newRoomNumber << " can only accommodate " << room.getMaxGuests() << " guests.\n";
+                                return; 
+                            }
+
+                          
+                            for (auto& oldRoom : rooms) {
+                                if (oldRoom.getRoomNumber() == reservation.getRoomNumber()) {
+                                    oldRoom.setAvailability(true);
+                                    break;
+                                }
+                            }
+
+                      
+                            reservation.updateRoomNumber(newRoomNumber); 
+                            room.setAvailability(false); 
+                            cout << "Room changed successfully.\n";
+                            return;
+                        }
+                    }
+                    cout << "Room not available.\n";
+                    break;
+                }
+                case 3: {
+    cout << "Current check-in date: " << reservation.getCheckInDate() << "\n";
+    cout << "Current check-out date: " << reservation.getCheckOutDate() << "\n";
+    string newCheckIn, newCheckOut;
+    cout << "Enter new check-in date (DD/MM/YYYY): ";
+    cin >> newCheckIn;
+    cout << "Enter new check-out date (DD/MM/YYYY): ";
+    cin >> newCheckOut;
+    reservation.updateDates(newCheckIn, newCheckOut); 
+    break;
+}
+
+                case 4: 
+                    return;
+                default:
+                    cout << "Invalid option.\n";
+            }
+            return;
+        }
+    }
+    cout << "Reservation not found.\n";
+}
+
+  
+
+ 
+    int getValidatedInt(const string& prompt) {
+        int value;
+        while (true) {
+            cout << prompt;
+            cin >> value;
+            if (cin.fail()) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+                cout << "Invalid input. Please enter a number.\n";
+            } else {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                return value;
+            }
+        }
     }
 };
