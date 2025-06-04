@@ -158,7 +158,9 @@ public:
         for (auto& room : rooms) {
             if (room.getRoomNumber() == roomNumber) {
                 room.setBaseRate(newRate);
+                cout << "\n===========================================\n";
                 cout << "Room " << roomNumber << " rate updated to $" << newRate << " successfully!\n";
+                cout << "=============================================\n";
                 return;
             }
         }
@@ -169,7 +171,9 @@ public:
         for (auto& room : rooms) {
             if (room.getRoomNumber() == roomNumber) {
                 room.setBillingStrategy(move(strategy));
+                cout << "\n===========================================\n";
                 cout << "Room " << roomNumber << " billing strategy updated successfully!\n";
+                cout << "============================================\n";
                 return;
             }
         }
@@ -193,7 +197,7 @@ public:
     }
 
    void showAllRooms() const {
-        cout << "===== ALL ROOMS =====\n";
+        cout << "\n================================= ALL ROOMS ==================================\n";
         cout << "Room #    Type           Base Rate      Status         Billing Type   Max Guests\n";
         cout << "--------------------------------------------------------------------------------\n";
         for (const auto& room : rooms) {
@@ -204,7 +208,7 @@ public:
                  << setw(12) << room.getBillingStrategyString() << "  "
                  << setw(10) << room.getMaxGuests() << "\n";
         }
-        cout << "===========================\n";
+        cout << "=================================================================================\n";
     }
 
    void makeReservation(const string& guestName, const string& contactInfo, int roomNumber, const string& checkIn, const string& checkOut, int guests) {
@@ -217,10 +221,14 @@ public:
             if (room.isRoomAvailable()) {
                 room.setAvailability(false);
                 reservations.emplace_back(guestName, contactInfo, roomNumber, checkIn, checkOut, guests);
+                cout << "\n===========================================\n";
                 cout << "Reservation created successfully!\n"; 
+                cout << "=============================================\n";
                 return;
             } else {
+                cout << "============================================\n";
                 cout << "Room not available for reservation.\n";
+                cout << "===========================================\n";
                 return;
             }
         }
@@ -241,7 +249,9 @@ public:
                     }
                 }
                 reservations.erase(it);
+                cout << "\n===========================================\n";
                 cout << "Reservation " << reservationID << " cancelled successfully!\n";
+                cout << "============================================\n";
                 return;
             }
         }
@@ -249,7 +259,7 @@ public:
     }
 
      void showAllReservations() const {
-        cout << "===== ALL RESERVATIONS =====\n";
+        cout << "\n==================== ALL RESERVATIONS =====================\n";
         cout << "ID        Guest Name      Room #    Check-in      Check-out\n";
         cout << "-------------------------------------------------------------\n";
         for (const auto& reservation : reservations) {
@@ -259,13 +269,13 @@ public:
                  << setw(12) << reservation.getCheckInDate() << "  | "
                  << setw(12) << reservation.getCheckOutDate() << "\n";
         }
-        cout << "===========================\n";
+        cout << "==============================================================\n";
     }
 
     void viewReservationDetails(int reservationID) const {
     for (const auto& reservation : reservations) {
         if (reservation.getReservationID() == reservationID) {
-            cout << "===== RESERVATION DETAILS =====\n";
+            cout << "\n=========== RESERVATION DETAILS ===========\n";
             cout << "Reservation #" << reservation.getReservationID() << "\n";
             cout << "Guest: " << reservation.getGuestName() << "\n";
             cout << "Contact: " << reservation.getContactInfo() << "\n";
@@ -316,7 +326,7 @@ public:
 void updateReservation(int reservationID) {
     for (auto& reservation : reservations) {
         if (reservation.getReservationID() == reservationID) {
-            cout << "Update Options:\n";
+            cout << "\nUpdate Options:\n";
             cout << "1. Change number of guests\n";
             cout << "2. Change room\n";
             cout << "3. Change dates\n";
@@ -340,7 +350,9 @@ void updateReservation(int reservationID) {
                     }
                     
                     reservation.updateGuests(newGuests);
+                    cout << "\n===========================================\n";
                     cout << "Number of guests updated successfully.\n";
+                    cout << "============================================\n";
                     break;
                 }
                 case 2: { 
@@ -367,7 +379,9 @@ void updateReservation(int reservationID) {
                       
                             reservation.updateRoomNumber(newRoomNumber); 
                             room.setAvailability(false); 
+                            cout << "\n===========================================\n";
                             cout << "Room changed successfully.\n";
+                            cout << "============================================\n";
                             return;
                         }
                     }
@@ -431,14 +445,14 @@ int main() {
     hotel.addRoom(402, Room::RoomType::SUITE, 225.00, make_unique<CorporateBilling>(), 6);
 
     do {
-        cout << "========== HOTEL MANAGEMENT SYSTEM ========== \n";
+        cout << "\n========== HOTEL MANAGEMENT SYSTEM ========== \n";
         mainChoice = hotel.getValidatedInt("1. Room Management \n2. Reservation Management \n3. Show Available Rooms \n4. Show All Rooms \n5. Show All Reservations \n6. Show Room Price Rates \n7. Exit \nEnter your choice: ");
 
 switch (mainChoice) {
     case 1: { // Room Management
         int roomChoice;
         do {
-            cout << "========== ROOM MANAGEMENT ==========\n";
+            cout << "\n========== ROOM MANAGEMENT ==========\n";
             cout << "1. Add New Room\n";
             cout << "2. Delete Room\n";
             cout << "3. Update Room Rate\n";
@@ -447,7 +461,7 @@ switch (mainChoice) {
             roomChoice = hotel.getValidatedInt("Enter your choice: ");
             switch (roomChoice) {
                 case 1: { // Add New Room
-                    cout << "========== ADD NEW ROOM ==========\n";
+                    cout << "\n========== ADD NEW ROOM ==========\n";
                     int roomNumber;
                     bool roomExists;
 
@@ -466,10 +480,10 @@ switch (mainChoice) {
                     } while (roomExists); // Repeat until a unique room number is entered
 
                     double baseRate;
-                    cout << "Enter base rate per night: $";
+                    cout << "\nEnter base rate per night: $";
                     cin >> baseRate;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Room Types:\n";
+                    cout << "\nRoom Types:\n";
                     cout << "1. Single (Max 1 guest)\n";
                     cout << "2. Double (Max 2 guests)\n";
                     cout << "3. Deluxe (Max 4 guests)\n";
@@ -484,7 +498,7 @@ switch (mainChoice) {
                         case Room::RoomType::SUITE: maxGuests = 6; break;
                         default: maxGuests = 1; break;
                     }
-                    cout << "Billing Strategies:\n";
+                    cout << "\nBilling Strategies:\n";
                     cout << "1. Regular Rate\n";
                     cout << "2. Premium Rate (10% service charge)\n";
                     cout << "3. Corporate Rate (15% discount)\n";
@@ -506,20 +520,22 @@ switch (mainChoice) {
                             continue; // Go back to the start of the loop
                     }
                     hotel.addRoom(roomNumber, roomType, baseRate, move(billingStrategy), maxGuests);
+                    cout << "\n==========================\n";
                     cout << "Room added successfully!\n";
+                    cout << "============================\n";
                     break;
                 }
                 case 2: { // Delete Room
-                    cout << "========== DELETE ROOM ========== \n";
+                    cout << "\n========== DELETE ROOM ========== \n";
                     hotel.showAllRooms();
-                    int roomNumberToDelete = hotel.getValidatedInt("Enter room number to delete: ");
+                    int roomNumberToDelete = hotel.getValidatedInt("\nEnter room number to delete: ");
                     hotel.deleteRoom(roomNumberToDelete);
                     break;
                 }
                 case 3: { // Update Room Rate
-                    cout << "========== UPDATE ROOM RATE ========== \n";
+                    cout << "\n========== UPDATE ROOM RATE ========== \n";
                     hotel.showAllRooms();
-                    int roomNumberToUpdate = hotel.getValidatedInt("Enter room number to update: ");
+                    int roomNumberToUpdate = hotel.getValidatedInt("\nEnter room number to update: ");
                     double newRate;
                     cout << "Enter new base rate per night: $";
                     cin >> newRate;
@@ -528,10 +544,10 @@ switch (mainChoice) {
                     break;
                 }
                 case 4: { // Update Room Billing Strategy
-                    cout << "========== UPDATE ROOM BILLING STRATEGY ========== \n";
+                    cout << "\n========== UPDATE ROOM BILLING STRATEGY ========== \n";
                     hotel.showAllRooms();
                     int roomNumberToUpdate = hotel.getValidatedInt("Enter room number to update: ");
-                    cout << "Billing Strategies:\n";
+                    cout << "\nBilling Strategies:\n";
                     cout << "1. Regular Rate\n";
                     cout << "2. Premium Rate (10% service charge)\n";
                     cout << "3. Corporate Rate (15% discount)\n";
@@ -564,7 +580,7 @@ switch (mainChoice) {
     }
     case 2: // Reservation Management
                 do {
-                    cout << "========== RESERVATION MANAGEMENT ========== \n";
+                    cout << "\n========== RESERVATION MANAGEMENT ========== \n";
                     reservationChoice = hotel.getValidatedInt("1. Make New Reservation \n2. Cancel Reservation \n3. View Reservation Details \n4. Update Reservation \n5. Back to Main Menu \nEnter your choice: ");
 
                     try {
@@ -572,7 +588,7 @@ switch (mainChoice) {
                            case 1: { // Make New Reservation
     string guestName, contactInfo, checkIn, checkOut;
     int roomNumber, guests;
-    cout << "========== MAKE NEW RESERVATION ========== \n";
+    cout << "\n========== MAKE NEW RESERVATION ========== \n";
     hotel.showAvailableRooms();
     cout << "Enter guest name: ";
     cin >> guestName;
@@ -593,16 +609,18 @@ switch (mainChoice) {
 
                             case 2: { // Cancel Reservation
                                 int reservationID;
-                                cout << "========== CANCEL RESERVATION ========== \n";
+                                cout << "\n========== CANCEL RESERVATION ========== \n";
                                 hotel.showAllReservations();
                                 reservationID = hotel.getValidatedInt("Enter reservation ID to cancel: ");
                                 hotel.cancelReservation(reservationID);
+                                cout << "\n===========================================\n";
                                 cout << "Reservation " << reservationID << " cancelled successfully! \n";
+                                cout << "============================================\n";
                                 break;
                             }
                             case 3: { // View Reservation Details
                                 int reservationID;
-                                cout << "========== VIEW RESERVATION DETAILS ========== \n";
+                                cout << "\n========== VIEW RESERVATION DETAILS ========== \n";
                                 hotel.showAllReservations();
                                 reservationID = hotel.getValidatedInt("Enter reservation ID to view: ");
                                 hotel.viewReservationDetails(reservationID);
@@ -610,7 +628,7 @@ switch (mainChoice) {
                             }
                             case 4: { // Update Reservation
                                 int reservationID;
-                                cout << "========== UPDATE RESERVATION ========== \n";
+                                cout << "\n========== UPDATE RESERVATION ========== \n";
                                 hotel.showAllReservations();
                                 reservationID = hotel.getValidatedInt("Enter reservation ID to update: ");
                                 hotel.updateReservation(reservationID);
@@ -640,7 +658,7 @@ switch (mainChoice) {
                 break;
 
             case 6: { // Show Room Price Rates
-                cout << "===== ROOM PRICE RATES =====\n";
+                cout << "\n====================== ROOM PRICE RATES ======================\n";
                 cout << "Room #    Type           Base Rate      Billing Type   Max Guests\n";
                 cout << "------------------------------------------------------------------\n";
                 for (const auto& room : hotel.getRooms()) {
@@ -654,7 +672,9 @@ switch (mainChoice) {
                 break;
             }
             case 7: // Exit
+                cout << "\n========== EXITING HOTEL MANAGEMENT SYSTEM ==========\n";
                 cout << "Thank you for using the Hotel Management System. Goodbye! \n";
+                cout << "======================================================\n\n";
                 break;
 
             default:
