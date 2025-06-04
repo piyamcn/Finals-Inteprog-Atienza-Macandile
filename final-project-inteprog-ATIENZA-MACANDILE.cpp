@@ -36,7 +36,7 @@ public:
 };
 
 class CorporateBilling : public BillingStrategy {
-public:
+public: 
     double calculateBill(double baseRate, int nights) const override {
         return baseRate * nights * 0.85; 
     }
@@ -145,7 +145,9 @@ public:
         for (auto it = rooms.begin(); it != rooms.end(); ++it) {
             if (it->getRoomNumber() == roomNumber) {
                 rooms.erase(it);
+                cout << "\n===========================================\n";
                 cout << "Room " << roomNumber << " deleted successfully!\n";
+                cout << "=============================================\n";
                 return;
             }
         }
@@ -190,7 +192,7 @@ public:
         cout << "===========================\n";
     }
 
-    void showAllRooms() const {
+   void showAllRooms() const {
         cout << "===== ALL ROOMS =====\n";
         cout << "Room #    Type           Base Rate      Status         Billing Type   Max Guests\n";
         cout << "--------------------------------------------------------------------------------\n";
@@ -246,7 +248,7 @@ public:
         cout << "Reservation not found.\n";
     }
 
-    void showAllReservations() const {
+     void showAllReservations() const {
         cout << "===== ALL RESERVATIONS =====\n";
         cout << "ID        Guest Name      Room #    Check-in      Check-out\n";
         cout << "-------------------------------------------------------------\n";
@@ -651,7 +653,6 @@ switch (mainChoice) {
                 cout << "===========================\n";
                 break;
             }
-
             case 7: // Exit
                 cout << "Thank you for using the Hotel Management System. Goodbye! \n";
                 break;
