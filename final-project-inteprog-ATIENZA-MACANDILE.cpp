@@ -259,18 +259,22 @@ public:
     }
 
      void showAllReservations() const {
-        cout << "\n==================== ALL RESERVATIONS =====================\n";
-        cout << "ID        Guest Name      Room #    Check-in      Check-out\n";
-        cout << "-------------------------------------------------------------\n";
-        for (const auto& reservation : reservations) {
-            cout << setw(8) << reservation.getReservationID() << "  | "
-                 << setw(12) << reservation.getGuestName() << "  | "
-                 << setw(8) << reservation.getRoomNumber() << "  | "
-                 << setw(12) << reservation.getCheckInDate() << "  | "
-                 << setw(12) << reservation.getCheckOutDate() << "\n";
-        }
-        cout << "==============================================================\n";
+    cout << "\n==================== ALL RESERVATIONS ============================\n";
+    cout << left << setw(8) << "ID" 
+         << left << setw(22) << "Guest Name" 
+         << left << setw(10) << "Room #" 
+         << left << setw(15) << "Check-in" 
+         << left << setw(15) << "Check-out" << "\n";
+    cout << "-------------------------------------------------------------------\n";
+    for (const auto& reservation : reservations) {
+        cout << left << setw(8) << reservation.getReservationID() 
+             << left << setw(22) << reservation.getGuestName() 
+             << left << setw(10) << reservation.getRoomNumber() 
+             << left << setw(15) << reservation.getCheckInDate() 
+             << left << setw(15) << reservation.getCheckOutDate() << "\n";
     }
+    cout << "===================================================================\n";
+}
 
     void viewReservationDetails(int reservationID) const {
     for (const auto& reservation : reservations) {
