@@ -473,14 +473,14 @@ switch (mainChoice) {
                         for (const auto& room : hotel.getRooms()) {
                             if (room.getRoomNumber() == roomNumber) {
                                 roomExists = true;
-                                cout << "\nRoom " << roomNumber << " already exists. Please enter a different room number.\n";
+                                cout << "Room " << roomNumber << " already exists. Please enter a different room number.\n";
                                 break; // Exit the loop if room exists
                             }
                         }
                     } while (roomExists); // Repeat until a unique room number is entered
 
                     double baseRate;
-                    cout << "Enter base rate per night: $";
+                    cout << "\nEnter base rate per night: $";
                     cin >> baseRate;
                     cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     cout << "\nRoom Types:\n";
@@ -585,18 +585,15 @@ switch (mainChoice) {
 
                     try {
                         switch (reservationChoice) {
-                          case 1: { // Make New Reservation
+                           case 1: { // Make New Reservation
     string guestName, contactInfo, checkIn, checkOut;
     int roomNumber, guests;
     cout << "\n========== MAKE NEW RESERVATION ========== \n";
     hotel.showAvailableRooms();
-    
-    // Use getline to read full names and contact info
     cout << "Enter guest name: ";
-    getline(cin >> ws, guestName); // 'ws' ignores leading whitespace
+    cin >> guestName;
     cout << "Enter contact information: ";
-    getline(cin >> ws, contactInfo); // 'ws' ignores leading whitespace
-    
+    cin >> contactInfo;
     roomNumber = hotel.getValidatedInt("Enter room number: ");
     cout << "Enter check-in date (DD/MM/YYYY): ";
     cin >> checkIn;
