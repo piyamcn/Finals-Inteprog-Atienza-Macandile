@@ -473,7 +473,7 @@ switch (mainChoice) {
                             if (room.getRoomNumber() == roomNumber) {
                                 roomExists = true;
                                 cout << "Room " << roomNumber << " already exists. Please enter a different room number.\n";
-                                break; // Exit the loop if room exists
+                                break; 
                             }
                         }
                     } while (roomExists); 
@@ -584,15 +584,17 @@ switch (mainChoice) {
 
                     try {
                         switch (reservationChoice) {
-                           case 1: { // Make New Reservation
+                           case 1: { 
     string guestName, contactInfo, checkIn, checkOut;
     int roomNumber, guests;
     cout << "\n========== MAKE NEW RESERVATION ========== \n";
     hotel.showAvailableRooms();
+    
     cout << "Enter guest name: ";
-    cin >> guestName;
+    getline(cin >> ws, guestName); 
     cout << "Enter contact information: ";
-    cin >> contactInfo;
+    getline(cin >> ws, contactInfo); 
+    
     roomNumber = hotel.getValidatedInt("Enter room number: ");
     cout << "Enter check-in date (DD/MM/YYYY): ";
     cin >> checkIn;
@@ -600,10 +602,9 @@ switch (mainChoice) {
     cin >> checkOut;
     guests = hotel.getValidatedInt("Enter number of guests: ");
     
-    
-                    hotel.makeReservation(guestName, contactInfo, roomNumber, checkIn, checkOut, guests);
-    
-                break;
+    hotel.makeReservation(guestName, contactInfo, roomNumber, checkIn, checkOut, guests);
+
+    break;
 }
 
                             case 2: { 
