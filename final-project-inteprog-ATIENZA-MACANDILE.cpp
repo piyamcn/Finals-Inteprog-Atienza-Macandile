@@ -179,37 +179,71 @@ public:
         }
         cout << "Room not found.\n";
     }
-
+   void showRoomPriceRates() const {
+    cout << "\n=============================== ROOM PRICE RATES =============================================\n";
+    cout << left << setw(8) << "Room #" 
+         << left << setw(12) << "Type" 
+         << right << setw(12) << "Base Rate" 
+         << left << setw(15) << " "  // space for alignment after base rate
+         << left << setw(15) << "Billing Type" 
+         << right << setw(12) << "Max Guests" << "\n";
+    cout << "------------------------------------------------------------------------------------------------\n";
+    for (const auto& room : rooms) {
+        cout << left << setw(8) << room.getRoomNumber()
+             << left << setw(12) << room.getRoomTypeString()
+             << right << setw(2) << "$"
+             << right << setw(10) << fixed << setprecision(2) << room.getBaseRate()
+             << left << setw(15) << " "
+             << left << setw(15) << room.getBillingStrategyString()
+             << right << setw(12) << room.getMaxGuests() << "\n";
+    }
+    cout << "================================================================================================\n";
+}
     void showAvailableRooms() const {
-        cout << "===== AVAILABLE ROOMS =====\n";
-        cout << "Room #    Type           Base Rate      Billing Type   Max Guests\n";
-        cout << "------------------------------------------------------------------\n";
-        for (const auto& room : rooms) {
-            if (room.isRoomAvailable()) {
-                cout << setw(8) << room.getRoomNumber() << "  "
-                     << setw(10) << room.getRoomTypeString() << "  "
-                     << "$" << fixed << setprecision(2) << setw(10) << room.getBaseRate() << "  "
-                     << setw(12) << room.getBillingStrategyString() << "  "
-                     << setw(10) << room.getMaxGuests() << "\n";
-            }
+    cout << "\n==================================== AVAILABLE ROOMS =========================================\n";
+    cout << left << setw(8) << "Room #" 
+         << left << setw(12) << "Type" 
+         << right << setw(12) << "Base Rate" 
+         << left << setw(15) << "  "  
+         << left << setw(15) << "Billing Type" 
+         << right << setw(12) << "Max Guests" << "\n";
+    cout << "------------------------------------------------------------------------------------------------\n";
+    for (const auto& room : rooms) {
+        if (room.isRoomAvailable()) {
+            cout << left << setw(8) << room.getRoomNumber()
+                 << left << setw(12) << room.getRoomTypeString()
+                 << right << setw(2) << "$"
+                 << right << setw(10) << fixed << setprecision(2) << room.getBaseRate()
+                 << left << setw(15) << " "
+                 << left << setw(15) << room.getBillingStrategyString()
+                 << right << setw(12) << room.getMaxGuests() << "\n";
         }
-        cout << "===========================\n";
     }
-
+    cout << "================================================================================================\n";
+}
    void showAllRooms() const {
-        cout << "\n================================= ALL ROOMS ==================================\n";
-        cout << "Room #    Type           Base Rate      Status         Billing Type   Max Guests\n";
-        cout << "--------------------------------------------------------------------------------\n";
-        for (const auto& room : rooms) {
-            cout << setw(8) << room.getRoomNumber() << "  "
-                 << setw(10) << room.getRoomTypeString() << "  "
-                 << "$" << fixed << setprecision(2) << setw(10) << room.getBaseRate() << "  "
-                 << setw(12) << (room.isRoomAvailable() ? "Available" : "Occupied") << "  "
-                 << setw(12) << room.getBillingStrategyString() << "  "
-                 << setw(10) << room.getMaxGuests() << "\n";
-        }
-        cout << "=================================================================================\n";
+    cout << "\n========================================= ALL ROOMS ==========================================\n";
+    cout << left << setw(8) << "Room #" 
+         << left << setw(12) << "Type" 
+         << right << setw(12) << "Base Rate" 
+         << left << setw(15) << "  "
+         << left << setw(12) << "Status" 
+         << left << setw(15) << "Billing Type" 
+         << right << setw(12) << "Max Guests" << "\n";
+    cout << "------------------------------------------------------------------------------------------------\n";
+    for (const auto& room : rooms) {
+        cout << left << setw(8) << room.getRoomNumber()
+             << left << setw(12) << room.getRoomTypeString()
+             << right << setw(2) << "$"
+             << right << setw(10) << fixed << setprecision(2) << room.getBaseRate()
+             << left << setw(15) << " "
+             << left << setw(12) << (room.isRoomAvailable() ? "Available" : "Occupied")
+             << left << setw(15) << room.getBillingStrategyString()
+             << right << setw(12) << room.getMaxGuests() << "\n";
     }
+    cout << "================================================================================================\n";
+}
+
 
    void makeReservation(const string& guestName, const string& contactInfo, int roomNumber, const string& checkIn, const string& checkOut, int guests) {
     for (auto& room : rooms) {
@@ -259,13 +293,13 @@ public:
     }
 
      void showAllReservations() const {
-    cout << "\n==================== ALL RESERVATIONS ============================\n";
+    cout << "\n============================= ALL RESERVATIONS ===============================================\n";
     cout << left << setw(8) << "ID" 
          << left << setw(22) << "Guest Name" 
          << left << setw(10) << "Room #" 
          << left << setw(15) << "Check-in" 
          << left << setw(15) << "Check-out" << "\n";
-    cout << "-------------------------------------------------------------------\n";
+    cout << "------------------------------------------------------------------------------------------------\n";
     for (const auto& reservation : reservations) {
         cout << left << setw(8) << reservation.getReservationID() 
              << left << setw(22) << reservation.getGuestName() 
@@ -273,7 +307,7 @@ public:
              << left << setw(15) << reservation.getCheckInDate() 
              << left << setw(15) << reservation.getCheckOutDate() << "\n";
     }
-    cout << "===================================================================\n";
+    cout << "================================================================================================\n";
 }
 
     void viewReservationDetails(int reservationID) const {
@@ -662,17 +696,8 @@ switch (mainChoice) {
                 break;
 
             case 6: { 
-                cout << "\n====================== ROOM PRICE RATES ======================\n";
-                cout << "Room #    Type           Base Rate      Billing Type   Max Guests\n";
-                cout << "------------------------------------------------------------------\n";
-                for (const auto& room : hotel.getRooms()) {
-                    cout << setw(8) << room.getRoomNumber() << "  "
-                         << setw(10) << room.getRoomTypeString() << "  "
-                         << "$" << fixed << setprecision(2) << setw(10) << room.getBaseRate() << "  "
-                         << setw(12) << room.getBillingStrategyString() << "  "
-                         << setw(10) << room.getMaxGuests() << "\n";
-                }
-                cout << "===========================\n";
+                cout << "\n========== SHOW ROOM PRICE RATES ========== \n";
+                hotel.showRoomPriceRates();
                 break;
             }
             case 7: 
