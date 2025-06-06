@@ -667,9 +667,6 @@ switch (mainChoice) {
                                 hotel.showAllReservations();
                                 reservationID = hotel.getValidatedInt("Enter reservation ID to cancel: ");
                                 hotel.cancelReservation(reservationID);
-                                cout << "\n===========================================\n";
-                                cout << "Reservation " << reservationID << " cancelled successfully! \n";
-                                cout << "============================================\n";
                                 break;
                             }
                             case 3: { 
