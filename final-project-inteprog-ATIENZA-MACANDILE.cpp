@@ -136,10 +136,98 @@ public:
     const vector<Room>& getRooms() const {
         return rooms;
     }
-
+    
     void addRoom(int number, Room::RoomType type, double rate, unique_ptr<BillingStrategy> strategy, int guests) {
         rooms.emplace_back(number, type, rate, move(strategy), guests);
     }
+
+void addRoomWithValidation() {
+    cout << "\n========== ADD NEW ROOM ==========\n";
+    int roomNumber;
+    bool roomExists;
+
+    do {
+        roomNumber = getValidatedInt("Enter room number: ");
+        roomExists = false;
+
+        for (const auto& room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                roomExists = true;
+                cout << "Room " << roomNumber << " already exists. Please enter a different room number.\n";
+                break; 
+            }
+        }
+    } while (roomExists); 
+
+    double baseRate;
+    while (true) {
+        cout << "Enter base rate per night: $";
+        string input;
+        cin >> input;
+
+        try {
+            baseRate = stod(input); // Convert string to double
+            if (baseRate <= 0) {
+                cout << "Invalid input. Please enter a positive number for the base rate.\n";
+            } else {
+                break; // Valid input
+            }
+        } catch (const invalid_argument&) {
+            cout << "Invalid input. Please enter a valid number for the base rate.\n";
+        } catch (const out_of_range&) {
+            cout << "Input is out of range. Please enter a valid number for the base rate.\n";
+        }
+    }
+
+    cout << "\nRoom Types:\n";
+    cout << "1. Single (Max 1 guest)\n";
+    cout << "2. Double (Max 2 guests)\n";
+    cout << "3. Deluxe (Max 4 guests)\n";
+    cout << "4. Suite (Max 6 guests)\n";
+    int roomTypeChoice = getValidatedInt("Select room type (1-4): ");
+    Room::RoomType roomType = static_cast<Room::RoomType>(roomTypeChoice - 1);
+    int maxGuests = 1;
+    switch (roomType) {
+        case Room::RoomType::SINGLE: maxGuests = 1; break;
+        case Room::RoomType::DOUBLE: maxGuests = 2; break;
+        case Room::RoomType::DELUXE: maxGuests = 4; break;
+        case Room::RoomType::SUITE: maxGuests = 6; break;
+        default: maxGuests = 1; break;
+    }
+
+    cout << "\nBilling Strategies:\n";
+    cout << "1. Regular Rate\n";
+    cout << "2. Premium Rate (10% service charge)\n";
+    cout << "3. Corporate Rate (15% discount)\n";
+
+    int billingStrategyChoice;
+    while (true) {
+        billingStrategyChoice = getValidatedInt("Select billing strategy (1-3): ");
+        if (billingStrategyChoice < 1 || billingStrategyChoice > 3) {
+            cout << "Invalid billing strategy choice. Please select a valid option (1-3).\n";
+        } else {
+            break; // Valid input
+        }
+    }
+
+    unique_ptr<BillingStrategy> billingStrategy;
+    switch (billingStrategyChoice) {
+        case 1:
+            billingStrategy = make_unique<RegularBilling>();
+            break;
+        case 2:
+            billingStrategy = make_unique<PremiumBilling>();
+            break;
+        case 3:
+            billingStrategy = make_unique<CorporateBilling>();
+            break;
+    }
+
+    addRoom(roomNumber, roomType, baseRate, move(billingStrategy), maxGuests);
+    cout << "\n==========================\n";
+    cout << "Room added successfully!\n";
+    cout << "============================\n";
+}
 
     void deleteRoom(int roomNumber) {
         for (auto it = rooms.begin(); it != rooms.end(); ++it) {
@@ -667,6 +755,7 @@ switch (mainChoice) {
                                 hotel.showAllReservations();
                                 reservationID = hotel.getValidatedInt("Enter reservation ID to cancel: ");
                                 hotel.cancelReservation(reservationID);
+
                                 break;
                             }
                             case 3: { 
