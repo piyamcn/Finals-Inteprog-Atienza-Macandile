@@ -184,7 +184,7 @@ public:
     cout << left << setw(8) << "Room #" 
          << left << setw(12) << "Type" 
          << right << setw(12) << "Base Rate" 
-         << left << setw(15) << " "  // space for alignment after base rate
+         << left << setw(15) << " "  
          << left << setw(15) << "Billing Type" 
          << right << setw(12) << "Max Guests" << "\n";
     cout << "------------------------------------------------------------------------------------------------\n";
@@ -453,16 +453,15 @@ void updateReservation(int reservationID) {
     while (true) {
         cout << prompt;
         string input;
-        cin >> input; // Read input as a string
+        cin >> input; 
 
-        // Check if the input is empty or contains any non-digit characters
         bool allDigits = true;
         if (input.empty()) {
-            allDigits = false; // Empty input is invalid
+            allDigits = false; 
         } else {
             for (char c : input) {
                 if (!isdigit(static_cast<unsigned char>(c))) {
-                    allDigits = false; // Found a non-digit character
+                    allDigits = false; 
                     break;
                 }
             }
@@ -470,16 +469,15 @@ void updateReservation(int reservationID) {
 
         if (!allDigits) {
             cout << "\nInvalid input. Please enter numbers only.\n\n";
-            continue; // Prompt again
+            continue; 
         }
 
-        // Convert string to int manually
         int value = 0;
         for (char c : input) {
             value = value * 10 + (c - '0');
         }
 
-        return value; // Return the valid integer
+        return value; 
     }
 }
 
