@@ -450,20 +450,39 @@ void updateReservation(int reservationID) {
 }
 
     int getValidatedInt(const string& prompt) {
-        int value;
-        while (true) {
-            cout << prompt;
-            cin >> value;
-            if (cin.fail()) {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-                cout << "Invalid input. Please enter a number.\n";
-            } else {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                return value;
+    while (true) {
+        cout << prompt;
+        string input;
+        cin >> input; // Read input as a string
+
+        // Check if the input is empty or contains any non-digit characters
+        bool allDigits = true;
+        if (input.empty()) {
+            allDigits = false; // Empty input is invalid
+        } else {
+            for (char c : input) {
+                if (!isdigit(static_cast<unsigned char>(c))) {
+                    allDigits = false; // Found a non-digit character
+                    break;
+                }
             }
         }
+
+        if (!allDigits) {
+            cout << "\nInvalid input. Please enter numbers only.\n\n";
+            continue; // Prompt again
+        }
+
+        // Convert string to int manually
+        int value = 0;
+        for (char c : input) {
+            value = value * 10 + (c - '0');
+        }
+
+        return value; // Return the valid integer
     }
+}
+
 };
 
 int main() {
@@ -482,8 +501,7 @@ int main() {
     hotel.addRoom(402, Room::RoomType::SUITE, 225.00, make_unique<CorporateBilling>(), 6);
 
     do {
-        cout << "\n========== HOTEL MANAGEMENT SYSTEM ========== \n";
-        mainChoice = hotel.getValidatedInt("1. Room Management \n2. Reservation Management \n3. Show Available Rooms \n4. Show All Rooms \n5. Show All Reservations \n6. Show Room Price Rates \n7. Exit \nEnter your choice: ");
+        mainChoice = hotel.getValidatedInt("\n========== HOTEL MANAGEMENT SYSTEM ========== \n1. Room Management \n2. Reservation Management \n3. Show Available Rooms \n4. Show All Rooms \n5. Show All Reservations \n6. Show Room Price Rates \n7. Exit \nEnter your choice: ");
 
 switch (mainChoice) {
     case 1: { 
